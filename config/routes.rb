@@ -13,6 +13,8 @@ Rails.application.routes.draw do
 
   get "user_home", to: "home#user_home", as: "user_home"
 
+
+
   resources :events do
     member do
       post "add_guest"  # Adds a guest to a specific event

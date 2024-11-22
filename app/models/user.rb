@@ -14,7 +14,7 @@
 class User < ApplicationRecord
     has_secure_password
 
-    has_many :guests
+    has_many :guest_lists, dependent: :destroy
     has_many :events_as_admin, -> { where(guest_lists: { role: "admin" }) }, through: :guest_lists, source: :event
     has_many :events_as_guest, -> { where(guest_lists: { role: "guest" }) }, through: :guest_lists, source: :event
 

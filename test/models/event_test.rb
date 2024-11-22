@@ -3,14 +3,12 @@
 # Table name: events
 #
 #  id          :integer          not null, primary key
-#  start_date  :datetime
-#  end_date    :datetime
+#  date        :datetime
 #  description :text
 #  end_time    :datetime
 #  location    :string
 #  start_time  :datetime
 #  title       :string
-#  creator_id  :integer          not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #

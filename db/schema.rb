@@ -12,17 +12,14 @@
 
 ActiveRecord::Schema[7.2].define(version: 2024_11_20_204731) do
   create_table "events", force: :cascade do |t|
-    t.datetime "start_date"
-    t.datetime "end_date"
+    t.datetime "date"
     t.text "description"
     t.datetime "end_time"
     t.string "location"
     t.datetime "start_time"
     t.string "title"
-    t.integer "creator_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["creator_id"], name: "index_events_on_creator_id"
   end
 
   create_table "events_guests", id: false, force: :cascade do |t|
@@ -43,15 +40,16 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_20_204731) do
   end
 
   create_table "guests", force: :cascade do |t|
-    t.string "role", default: "guest"
-    t.string "rsvp_status", default: "pending"
+    t.string "email", null: false
+    t.string "first_name"
+    t.string "last_name"
     t.integer "party_size"
+    t.string "password_digest", default: "", null: false
+    t.string "phone"
     t.integer "event_id"
-    t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["event_id"], name: "index_guests_on_event_id"
-    t.index ["user_id"], name: "index_guests_on_user_id"
   end
 
   create_table "organizers", force: :cascade do |t|
@@ -73,9 +71,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_20_204731) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "events", "users", column: "creator_id"
   add_foreign_key "guest_lists", "events"
   add_foreign_key "guest_lists", "guests"
   add_foreign_key "guests", "events"
-  add_foreign_key "guests", "users"
 end
