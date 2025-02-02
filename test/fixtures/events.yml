@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+birthday_party:
+  title: Birthday Party
+  description: A birthday celebration
+  start_date: <%= Time.current %>
+  end_date: <%= Time.current + 2.hours %>
+  start_time: <%= Time.current %>
+  end_time: <%= Time.current + 2.hours %>
+  location: Home
+  user: one
+
+conference:
+  title: Tech Conference
+  description: Annual tech meetup
+  start_date: <%= Time.current + 1.week %>
+  end_date: <%= Time.current + 1.week + 8.hours %>
+  start_time: <%= Time.current + 1.week %>
+  end_time: <%= Time.current + 1.week + 8.hours %>
+  location: Convention Center
+  user: two 
