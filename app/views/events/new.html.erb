@@ -4,7 +4,11 @@
 
 <div class="container d-flex justify-content-center align-items-start" style="min-height: 70vh; padding-top: 10px; padding-bottom: 30px;">
   <div class="card p-4" style="width: 50vw; max-width: 600px; height: auto;">
+    
+    <!-- Form for creating a new event -->
     <%= form_with model: @event, local: true, html: { class: 'w-100' } do |form| %>
+    
+      <!-- Error message section if any validation errors occur -->
       <% if @event.errors.any? %>
         <div id="error_explanation" class="alert alert-danger">
           <h2><%= pluralize(@event.errors.count, "error") %> prohibited this event from being saved:</h2>
@@ -16,22 +20,25 @@
         </div>
       <% end %>
 
+      <!-- Title Input -->
       <div class="mb-3">
         <%= form.label :title, class: 'form-label' %>
         <%= form.text_field :title, id: :event_title, class: 'form-control' %>
       </div>
 
+      <!-- Start Date Input -->
       <div class="mb-3">
         <%= form.label :start_date, class: 'form-label' %>
         <%= form.date_field :start_date, id: :event_start_date, class: 'form-control' %>
       </div>
 
+      <!-- End Date Input -->
       <div class="mb-3">
         <%= form.label :end_date, class: 'form-label' %>
         <%= form.date_field :end_date, id: :event_end_date, class: 'form-control' %>
       </div>
 
-      <!-- Start Time -->
+      <!-- Start Time Inputs (Hour, Minute, AM/PM) -->
       <div class="mb-3">
         <%= form.label :start_time, class: 'form-label' %>
         <div class="row">
@@ -47,7 +54,7 @@
         </div>
       </div>
 
-      <!-- End Time -->
+      <!-- End Time Inputs (Hour, Minute, AM/PM) -->
       <div class="mb-3">
         <%= form.label :end_time, class: 'form-label' %>
         <div class="row">
@@ -63,25 +70,27 @@
         </div>
       </div>
 
+      <!-- Location Input -->
       <div class="mb-3">
         <%= form.label :location, class: 'form-label' %>
         <%= form.text_field :location, id: :event_location, class: 'form-control' %>
       </div>
 
-<!-- app/views/events/show.html.erb -->
-<h1><%= @event.title %></h1>
-<p><%= @event.description %></p>
-
+      <!-- Description Input -->
       <div class="mb-3">
         <%= form.label :description, class: 'form-label' %>
         <%= form.text_area :description, id: :event_description, class: 'form-control', rows: 2 %>
       </div>
+
+      <!-- Submit and Navigation Buttons -->
       <div class="d-flex justify-content-between">
+        <!-- Link to go back to the events list -->
         <%= link_to 'Back to Events', events_path, class: 'btn btn-secondary' %>
+        
+        <!-- Submit button to create the event -->
         <%= form.submit "Create Event", class: 'btn btn-primary' %>
       </div>
 
     <% end %>
   </div>
 </div>
-

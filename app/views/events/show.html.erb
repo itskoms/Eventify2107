@@ -2,86 +2,84 @@
 
 <div class="container">
 
+  <!-- Event Title -->
   <h1 class="text-left mb-4"><%= @event.title %></h1>
 
+  <div class="row w-100">
+    <!-- Left Card: Event Information -->
+    <div class="col-md-6 mb-4">
+      <div class="card p-4" style="height: auto;">
+        <h3 class="text-center mb-4">Event Information</h3>
+        
+        <!-- Displaying Event Date & Time Information -->
+        <div class="mb-3">
+          <p><strong>Date:</strong> <%= @event.start_date.strftime("%B %d, %Y") if @event.start_date %></p>
+        </div>
+        <div class="mb-3">
+          <p><strong>End Date:</strong> <%= @event.end_date.strftime("%B %d, %Y") if @event.end_date %></p>
+        </div>
+        <div class="mb-3">
+          <p><strong>Start Time:</strong> <%= @event.start_time.strftime("%I:%M %p") if @event.start_time %></p>
+        </div>
+        <div class="mb-3">
+          <p><strong>End Time:</strong> <%= @event.end_time.strftime("%I:%M %p") if @event.end_time %></p>
+        </div>
+        <div class="mb-3">
+          <p><strong>Location:</strong> <%= @event.location %></p>
+        </div>
+        <div class="mb-3">
+          <p><strong>Description:</strong> <%= @event.description %></p>
+        </div>
 
-    <div class="row w-100">
-      <!-- Left Card (Event Info) -->
+        <!-- Action Buttons (Edit, Back to Events) -->
+        <div class="d-flex gap-3 justify-content-start mt-4">
+          <!-- Only show 'Edit' button if the current user is the event organizer -->
+          <% if @event.user_id == @user.id %>
+            <%= link_to 'Edit', edit_event_path(@event), class: 'btn btn-primary' %>
+          <% end %>
+          <%= link_to 'All Events', events_path, class: 'btn btn-secondary' %>
+        </div>
+
+      </div>
+    </div>
+    
+    <!-- Right Card: Guest List (Only for Event Organizer) -->
+    <% if @event.user_id == @user.id %>
       <div class="col-md-6 mb-4">
         <div class="card p-4" style="height: auto;">
-          <h3 class="text-center mb-4">Event Information</h3>
-          
-          <!-- Event Date & Time Information -->
-          <div class="mb-3">
-            <p><strong>Date:</strong> <%= @event.start_date.strftime("%B %d, %Y") if @event.start_date %></p>
-          </div>
-          <div class="mb-3">
-            <p><strong>End Date:</strong> <%= @event.end_date.strftime("%B %d, %Y") if @event.end_date %></p>
-          </div>
-          <div class="mb-3">
-            <p><strong>Start Time:</strong> <%= @event.start_time.strftime("%I:%M %p") if @event.start_time %></p>
-          </div>
-          <div class="mb-3">
-            <p><strong>End Time:</strong> <%= @event.end_time.strftime("%I:%M %p") if @event.end_time %></p>
-          </div>
-          <div class="mb-3">
-            <p><strong>Location:</strong> <%= @event.location %></p>
-          </div>
-          <div class="mb-3">
-            <p><strong>Description:</strong> <%= @event.description %></p>
-          </div>
-
-          <!-- Action Buttons (Edit, Back to Events, Delete) -->
-          <div class="d-flex gap-3 justify-content-start mt-4">
-            <%  if @event.user_id == @user.id %>
-              <%= link_to 'Edit', edit_event_path(@event), class: 'btn btn-primary' %>
-            <% end %>
-            <%= link_to 'All Events', events_path, class: 'btn btn-secondary' %>
-            
-          </div>
-
-        </div>
-      </div>
-      
-
-      <%  if @event.user_id == @user.id %>
-        <div class="col-md-6 mb-4">
-          <div class="card p-4" style="height: auto;">
           <h3 class="text-center mb-4">Guest List</h3>
           <span class="text-center"><strong>Event Organizer:</strong> <%= @user.first_name + " " + @user.last_name %></span>
-            <table class="table">
-              <thead class="thead-light">
-                <tr>
-                  <th scope="col">First</th>
-                  <th scope="col">Last</th>
-                  <th scope="col">Email</th>
-                  <th scope="col" class="text-center">Party Size</th>
-                  <th scope="col" class="text-center">RSVP Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% @guests.zip(@users).each do |guest, user| %>
-                  <% unless @event.user_id == user.id %>
-                    <tr>
-                      <td><%= user.first_name %></td>
-                      <td><%= user.last_name %></td>
-                      <td><%= user.email %></td>
-                      <td class="text-center"><%= guest.party_size %></td>
-                      <td class="text-center"><%= guest.rsvp_status %></td>
-                    </tr>
-                  <% end %>
+          
+          <!-- Guest List Table -->
+          <table class="table">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+                <th scope="col">Email</th>
+                <th scope="col" class="text-center">Party Size</th>
+                <th scope="col" class="text-center">RSVP Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Loop through the guests and users -->
+              <% @guests.zip(@users).each do |guest, user| %>
+                <!-- Ensure that the organizer is not included in the guest list -->
+                <% unless @event.user_id == user.id %>
+                  <tr>
+                    <td><%= user.first_name %></td>
+                    <td><%= user.last_name %></td>
+                    <td><%= user.email %></td>
+                    <td class="text-center"><%= guest.party_size %></td>
+                    <td class="text-center"><%= guest.rsvp_status %></td>
+                  </tr>
                 <% end %>
-              </tbody>
-            </table>
-          </div>
+              <% end %>
+            </tbody>
+          </table>
         </div>
-      <% end %>
-    </div>
+      </div>
+    <% end %>
+  </div>
   
 </div>
-
-
-  
-
-
-  

@@ -12,9 +12,14 @@
 #  updated_at  :datetime         not null
 #
 class Guest < ApplicationRecord
+    # Associations
     belongs_to :event
-    belongs_to :user
-
+    belongs_to :user 
+  
+    # Enum for role - defines the possible roles a guest can have
     enum role: [ :guest, :admin ]
+  
+    # Enum for RSVP status - defines the possible RSVP statuses for a guest
     enum rsvp_status: [ :pending, :accepted, :declined ]
-end
+  end
+  
