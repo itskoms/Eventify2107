@@ -102,7 +102,7 @@ class EventsController < ApplicationController
     guest.party_size = params[:party_size]  
 
     if guest.save  # Attempt to save the guest record
-      redirect_to edit_event_path(@event), notice: "Guest was successfully added."  successful
+      redirect_to edit_event_path(@event), notice: "Guest was successfully added."
     else
       redirect_to @event, alert: "Failed to add guest: #{guest.errors.full_messages.join(', ')}"  
     end

@@ -87,7 +87,7 @@
 
                         <div class="form-check">
                           <%= form.radio_button :rsvp_status, 'pending', checked: guest_entry&.rsvp_status == 'pending', class: 'form-check-input' %>
-                          <%= form.label :rsvp_status_pending, 'Tentative', class: 'form-check-label ms-2' %>
+                          <%= form.label :rsvp_status_pending, 'Pending', class: 'form-check-label ms-2' %>
                         </div>
 
                         <%= form.submit 'RSVP', class: "btn btn-primary ms-3" %>
