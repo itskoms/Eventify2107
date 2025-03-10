@@ -8,14 +8,14 @@ class EventsController < ApplicationController
   def index
     @organized_events = Event.where(user_id: current_user.id)
     @guest_events = Event.joins(:guests).where("guests.user_id = ? AND events.user_id != ?", current_user.id, current_user.id).distinct
-    @events = @organized_events + @guest_events  
+    @events = @organized_events + @guest_events
   end
 
   # Displays the details of a specific event
   def show
     @event = Event.find(params[:id])  # Fetch the event by its ID
-    @user = current_user 
-    @guests = @event.guests 
+    @user = current_user
+    @guests = @event.guests
     @users = []
     # Iterate over the guests to gather the associated users
     @guests.each do |guest|
@@ -33,37 +33,37 @@ class EventsController < ApplicationController
 
   # Creates a new event with the provided parameters
   def create
-    @event = Event.new(event_params)  
-    @event.user = current_user 
+    @event = Event.new(event_params)
+    @event.user = current_user
 
     # Parse the start and end times for the event
     @event.start_time = parse_date_and_time(params[:event][:start_date], params[:event][:start_hour], params[:event][:start_minute], params[:event][:start_period])
     @event.end_time = parse_date_and_time(params[:event][:end_date], params[:event][:end_hour], params[:event][:end_minute], params[:event][:end_period])
 
     if @event.save  # Attempt to save the event to the database
-      Rails.logger.info "Event created successfully! ID: #{@event.id}" 
+      Rails.logger.info "Event created successfully! ID: #{@event.id}"
       # Automatically make the event creator an admin guest for the event
       @event.guests.create!(user: current_user, role: "admin", rsvp_status: "accepted")
-      redirect_to @event, notice: "Event was successfully created." 
+      redirect_to @event, notice: "Event was successfully created."
     else
-      Rails.logger.error "Failed to create event. Errors: #{@event.errors.full_messages.join(", ")}" 
-      flash.now[:alert] = "Failed to create event: #{@event.errors.full_messages.join(", ")}"  
-      render :new 
+      Rails.logger.error "Failed to create event. Errors: #{@event.errors.full_messages.join(", ")}"
+      flash.now[:alert] = "Failed to create event: #{@event.errors.full_messages.join(", ")}"
+      render :new
     end
   end
 
   # Edits an existing event
   def edit
     @event = Event.find(params[:id])  # Fetch the event by its ID
-    @user = current_user 
-    @guests = @event.guests  
+    @user = current_user
+    @guests = @event.guests
     @users = []
     # Iterate over the guests to gather the associated users
     @guests.each do |guest|
       tuser = User.find(guest.user_id)
       @users << tuser if tuser  # Add the user to the list if found
     end
-    @guests.zip @users  
+    @guests.zip @users
   end
 
   # Updates an existing event with new information
@@ -73,7 +73,7 @@ class EventsController < ApplicationController
     @event.end_time = parse_date_and_time(params[:event][:end_date], params[:event][:end_hour], params[:event][:end_minute], params[:event][:end_period])
 
     if @event.update(event_params)  # Attempt to update the event with the provided parameters
-      redirect_to @event, notice: "Event was successfully updated." 
+      redirect_to @event, notice: "Event was successfully updated."
     else
       render :edit  # Render the edit form again if there are errors
     end
@@ -84,27 +84,27 @@ class EventsController < ApplicationController
     @event.destroy!  # Attempt to destroy the event
     redirect_to events_path, notice: "Event was successfully deleted."  # Redirect to the events index page if successful
   rescue ActiveRecord::RecordNotDestroyed => e
-    redirect_to events_path, alert: "Event could not be deleted: " + e.message  
+    redirect_to events_path, alert: "Event could not be deleted: " + e.message
   end
 
   # Adds a new guest to an event or updates an existing guest's information
   def add_guest
     @event = Event.find(params[:id])  # Find the event by ID
-    @user = User.find_or_create_by(email: params[:email]) do |user| 
+    @user = User.find_or_create_by(email: params[:email]) do |user|
       user.first_name = params[:first_name]
       user.last_name = params[:last_name]
-      user.password = user.first_name + user.last_name  
+      user.password = user.first_name + user.last_name
     end
 
     # Find or initialize the guest record for the user and event
     guest = @event.guests.find_or_initialize_by(user: @user)
-    guest.role ||= "guest" 
-    guest.party_size = params[:party_size]  
+    guest.role ||= "guest"
+    guest.party_size = params[:party_size]
 
     if guest.save  # Attempt to save the guest record
       redirect_to edit_event_path(@event), notice: "Guest was successfully added."
     else
-      redirect_to @event, alert: "Failed to add guest: #{guest.errors.full_messages.join(', ')}"  
+      redirect_to @event, alert: "Failed to add guest: #{guest.errors.full_messages.join(', ')}"
     end
   end
 
@@ -113,12 +113,12 @@ class EventsController < ApplicationController
     @guest = @event.guests.find(params[:guest_id])  # Find the guest by ID
 
     if @guest.destroy  # Attempt to destroy the guest
-      flash[:notice] = "Guest successfully removed."  
+      flash[:notice] = "Guest successfully removed."
     else
-      flash[:alert] = "Failed to remove guest." 
+      flash[:alert] = "Failed to remove guest."
     end
 
-    redirect_to edit_event_path(@event)  
+    redirect_to edit_event_path(@event)
   end
 
   private

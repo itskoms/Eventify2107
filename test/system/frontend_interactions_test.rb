@@ -147,4 +147,35 @@ class FrontendInteractionsTest < ApplicationSystemTestCase
       assert_text @event.title
     end
   end
+
+  test "calendar performance with many events" do
+    # Here we are creating 30 events starting from tomorrow
+    base_time = Time.current.tomorrow.beginning_of_day
+    30.times do |i|
+      Event.create!(
+        title: "Event #{i}",
+        description: "Test event",
+        start_date: base_time + i.days,
+        end_date: base_time + i.days + 2.hours,
+        start_time: base_time + i.days,
+        end_time: base_time + i.days + 2.hours,
+        location: "Test Location",
+        user: @user
+      )
+    end
+
+    sign_in_as(@user)
+
+    # Here we are measuring the load time of the calendar
+    start_time = Time.current
+    visit events_path
+    load_time = Time.current - start_time
+
+    # Here is our assertion of acceptable load time
+    assert load_time < 3.0, "Calendar took too long to load: #{load_time} seconds"
+
+    # Here we are verifying that the calendar rendered correctly
+    assert_selector ".simple-calendar"
+    assert_selector ".card", text: "Event 1"
+  end
 end
