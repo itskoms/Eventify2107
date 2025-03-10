@@ -20,6 +20,6 @@ class Guest < ApplicationRecord
     enum role: [ :guest, :admin ]
   
     # Enum for RSVP status - defines the possible RSVP statuses for a guest
-    enum rsvp_status: [ :pending, :accepted, :declined ]
+    validates :rsvp_status, inclusion: {in: ['accepted', 'declined', 'pending']}
   end
   

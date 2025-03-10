@@ -38,6 +38,18 @@ class GuestsController < ApplicationController
     end
   end
 
+  # Update guest attendence
+  def update_attendance
+    Rails.logger.debug "Params: #(params.inspect}" # Log the entire params hash
+    guest = Guest.find_by(user_id: current_user.id, event_id: params[:event_id])
+
+    if guest.update(rsvp_status: params[:rsvp_status])
+      redirect_to root_path, notice: 'Your RSVP status has been updated!'
+    else
+      redirect_to root_path, alert: 'Failed to update RSVP status.'
+    end 
+  end
+
   # Remove a guest from an event
   def destroy
     guest = @event.guests.find(params[:id])
