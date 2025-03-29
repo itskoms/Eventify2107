@@ -25,9 +25,11 @@ Planning events can be a daunting task, requiring the coordination of multiple e
 2. Clone the repository:
    ```bash
    git clone https://github.com/itskoms/Eventify.git
-3. run 'bundle install' to install all the dependencies.
-4. run 'rails db:migrate' to run all migrations to set up the database.
-5. run 'rails db:seed' to seed data into the database.
+3. Once cloned type “cd Eventify2107” to switch into the project folder
+4. Run 'bundle install' to install all the dependencies.
+5. Run 'rails db:migrate' to run all migrations to set up the database.
+6. Run “rails db:schema:load” to initialize the database
+7. Run 'rails db:seed' to seed data into the database.
 
 ## Run the Server
 1. Run 'rails s' to run the server, you will be taken to the login page. You can either use a user login from the seeds.rb file or create your own user.
