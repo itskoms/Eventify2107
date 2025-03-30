@@ -14,12 +14,11 @@
 class Guest < ApplicationRecord
     # Associations
     belongs_to :event
-    belongs_to :user 
-  
+    belongs_to :user
+
     # Enum for role - defines the possible roles a guest can have
-    enum role: [ :guest, :admin ]
-  
+    enum :role, [ :guest, :admin ]
+
     # Enum for RSVP status - defines the possible RSVP statuses for a guest
-    validates :rsvp_status, inclusion: {in: ['accepted', 'declined', 'pending']}
-  end
-  
+    validates :rsvp_status, inclusion: { in: [ "accepted", "declined", "pending" ] }
+end

@@ -1,6 +1,7 @@
 class GuestsController < ApplicationController
   # Ensure the user is authenticated before accessing any actions
   before_action :authenticate_user!
+  before_action :set_event, only: [ :index, :create, :update, :destroy ]
 
   # Display all events where the current user is a guest
   def index
@@ -8,17 +9,36 @@ class GuestsController < ApplicationController
   end
 
   # Create a new guest for an event, either by finding or creating the user
+  # Create a new guest for an event
   def create
+    # Validate required parameters
+    if params[:email].blank?
+      redirect_to @event, alert: "Failed to create guest: Email can't be blank" and return
+    end
+
+    if params[:first_name].blank?
+      redirect_to @event, alert: "Failed to create guest: First name can't be blank" and return
+    end
+
+    if params[:last_name].blank?
+      redirect_to @event, alert: "Failed to create guest: Last name can't be blank" and return
+    end
+
+    # Find or create the user
     @user = User.find_or_create_by(email: params[:email]) do |user|
       user.first_name = params[:first_name]
       user.last_name = params[:last_name]
-      user.password = SecureRandom.hex(8)  # Generate a random password
+      user.password = SecureRandom.hex(8) # Generate a random password
     end
 
-    # Build a new guest associated with the event and user
-    guest = @event.guests.build(user: @user, role: params[:role] || "guest")
+    # Check if the user was successfully created
+    unless @user.persisted?
+      redirect_to @event, alert: "Failed to create guest: #{user.errors.full_messages.join(', ')}" and return
+    end
 
-    # Attempt to save the guest and redirect with appropriate notice
+    # Build the guest record
+    guest = @event.guests.build(user: @user, role: params[:role] || "guest", party_size: params[:party_size])
+
     if guest.save
       redirect_to @event, notice: "Guest successfully created."
     else
@@ -44,10 +64,10 @@ class GuestsController < ApplicationController
     guest = Guest.find_by(user_id: current_user.id, event_id: params[:event_id])
 
     if guest.update(rsvp_status: params[:rsvp_status])
-      redirect_to root_path, notice: 'Your RSVP status has been updated!'
+      redirect_to root_path, notice: "Your RSVP status has been updated!"
     else
-      redirect_to root_path, alert: 'Failed to update RSVP status.'
-    end 
+      redirect_to root_path, alert: "Failed to update RSVP status."
+    end
   end
 
   # Remove a guest from an event

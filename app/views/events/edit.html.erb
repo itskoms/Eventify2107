@@ -40,36 +40,54 @@
           </div>
 
           <!-- Start Time -->
-          <div class="mb-3">
-            <%= form.label :start_time, class: 'form-label' %>
-            <div class="row">
-              <div class="col">
-                <%= form.select :start_hour, (1..12).to_a, { selected: @event.start_time&.hour % 12 == 0 ? 12 : @event.start_time.hour % 12, prompt: 'Hour' }, class: 'form-control' %>
-              </div>
-              <div class="col">
-                <%= form.select :start_minute, ['00', '15', '30', '45'], { selected: @event.start_time&.min.to_s.rjust(2, '0'), prompt: 'Minute' }, class: 'form-control' %>
-              </div>
-              <div class="col">
-                <%= form.select :start_period, ['AM', 'PM'], { selected: @event.start_time&.hour >= 12 ? 'PM' : 'AM', prompt: 'AM/PM' }, class: 'form-control' %>
-              </div>
-            </div>
-          </div>
+<div class="mb-3">
+    <%= form.label :start_time, class: 'form-label' %>
+      <div class="row">
+        <div class="col">
+          <%= form.select :start_hour, (1..12).to_a, { 
+          selected: @event.start_time&.hour ? (@event.start_time.hour % 12 == 0 ? 12 : @event.start_time.hour % 12) : nil, 
+          prompt: 'Hour' 
+        }, class: 'form-control' %>
+    </div>
+    <div class="col">
+      <%= form.select :start_minute, ['00', '15', '30', '45'], { 
+        selected: @event.start_time&.min&.to_s&.rjust(2, '0'), 
+        prompt: 'Minute' 
+      }, class: 'form-control' %>
+    </div>
+    <div class="col">
+      <%= form.select :start_period, ['AM', 'PM'], { 
+        selected: @event.start_time&.hour ? (@event.start_time.hour >= 12 ? 'PM' : 'AM') : nil, 
+        prompt: 'AM/PM' 
+      }, class: 'form-control' %>
+    </div>
+  </div>
+</div>
 
-          <!-- End Time -->
-          <div class="mb-3">
-            <%= form.label :end_time, class: 'form-label' %>
-            <div class="row">
-              <div class="col">
-                <%= form.select :end_hour, (1..12).to_a, { selected: @event.end_time&.hour % 12 == 0 ? 12 : @event.end_time.hour % 12, prompt: 'Hour' }, class: 'form-control' %>
-              </div>
-              <div class="col">
-                <%= form.select :end_minute, ['00', '15', '30', '45'], { selected: @event.end_time&.min.to_s.rjust(2, '0'), prompt: 'Minute' }, class: 'form-control' %>
-              </div>
-              <div class="col">
-                <%= form.select :end_period, ['AM', 'PM'], { selected: @event.end_time&.hour >= 12 ? 'PM' : 'AM', prompt: 'AM/PM' }, class: 'form-control' %>
-              </div>
-            </div>
-          </div>
+<!-- End Time -->
+<div class="mb-3">
+  <%= form.label :end_time, class: 'form-label' %>
+  <div class="row">
+    <div class="col">
+      <%= form.select :end_hour, (1..12).to_a, { 
+        selected: @event.end_time&.hour ? (@event.end_time.hour % 12 == 0 ? 12 : @event.end_time.hour % 12) : nil, 
+        prompt: 'Hour' 
+      }, class: 'form-control' %>
+    </div>
+    <div class="col">
+      <%= form.select :end_minute, ['00', '15', '30', '45'], { 
+        selected: @event.end_time&.min&.to_s&.rjust(2, '0'), 
+        prompt: 'Minute' 
+      }, class: 'form-control' %>
+    </div>
+    <div class="col">
+      <%= form.select :end_period, ['AM', 'PM'], { 
+        selected: @event.end_time&.hour ? (@event.end_time.hour >= 12 ? 'PM' : 'AM') : nil, 
+        prompt: 'AM/PM' 
+      }, class: 'form-control' %>
+    </div>
+  </div>
+</div>
 
           <!-- Location -->
           <div class="mb-3">
