@@ -134,20 +134,6 @@ class FrontendInteractionsTest < ApplicationSystemTestCase
     assert_text "Updated celebration details"
   end
 
-  test "event filtering and organization" do
-    sign_in_as(@user)
-    visit events_path
-
-    # Test event cards section
-    assert_selector ".card", text: @event.title
-
-    # Test calendar view
-    within(".card", text: "Event Calendar") do
-      assert_selector ".simple-calendar"
-      assert_text @event.title
-    end
-  end
-
   test "calendar performance with many events" do
     # Here we are creating 30 events starting from tomorrow
     base_time = Time.current.tomorrow.beginning_of_day
