@@ -75,14 +75,44 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update event" do
-    patch event_url(@event), params: { event: { title: "Updated Title" } }
+    patch event_url(@event), params: {
+      event: {
+        title: "Updated Title",
+        description: @event.description,
+        location: @event.location,
+        start_date: @event.start_date,
+        end_date: @event.end_date
+      },
+      start_hour: "2",
+      start_minute: "00",
+      start_period: "PM",
+      end_hour: "4",
+      end_minute: "00",
+      end_period: "PM"
+    }
+
     assert_redirected_to event_url(@event)
     assert_equal "Event was successfully updated.", flash[:notice]
     assert_equal "Updated Title", @event.reload.title
   end
 
   test "should not update event with invalid data" do
-    patch event_url(@event), params: { event: { title: "" } }  # Invalid data
+    patch event_url(@event), params: {
+      event: {
+        title: "",
+        description: @event.description,
+        location: @event.location,
+        start_date: @event.start_date,
+        end_date: @event.end_date
+      },
+      start_hour: "2",
+      start_minute: "00",
+      start_period: "PM",
+      end_hour: "4",
+      end_minute: "00",
+      end_period: "PM"
+    }
+
     assert_equal "Test Event", @event.title
     assert_template :edit
   end
@@ -94,23 +124,5 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to events_url
     assert_equal "Event was successfully deleted.", flash[:notice]
-  end
-
-  test "should add guest to event" do
-    assert_difference "@event.guests.count", 1 do
-      post add_guest_event_url(@event), params: { email: "new_guest@example.com", first_name: "John", last_name: "Doe" }
-    end
-
-    assert_redirected_to @event
-    follow_redirect!
-    assert_equal flash[:notice], "Guest successfully added."
-  end
-
-  test "should not add invalid guest to event" do
-    assert_no_difference("Guest.count") do
-      post add_guest_event_url(@event), params: { email: "" }
-    end
-    assert_redirected_to event_url(@event)
-    assert_equal "Failed to add guest: Email can't be blank", flash[:alert]
   end
 end

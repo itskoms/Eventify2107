@@ -75,6 +75,16 @@ class EventsController < ApplicationController
     if @event.update(event_params)  # Attempt to update the event with the provided parameters
       redirect_to @event, notice: "Event was successfully updated."
     else
+      # Set the variables needed by the edit template
+      @user = current_user
+      @guests = @event.guests
+      @users = []
+      # Iterate over the guests to gather the associated users
+      @guests.each do |guest|
+        tuser = User.find(guest.user_id)
+        @users << tuser if tuser  # Add the user to the list if found
+      end
+
       render :edit  # Render the edit form again if there are errors
     end
   end
